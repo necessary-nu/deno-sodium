@@ -66,7 +66,7 @@ just build-all
 ```typescript
 #!/usr/bin/env deno run --allow-read --allow-ffi --allow-env
 
-import * as sodium from "./dist/index.js";
+import * as sodium from "./dist/mod.js";
 
 // Initialize libsodium
 await sodium.ensureInit();

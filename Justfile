@@ -61,20 +61,17 @@ clean:
 # Post-process generated files
 post-process:
     @echo "🔧 Post-processing generated files..."
-    @if [ -f dist/index.js ]; then \
-        sed -i.bak '/export { ensureInit }/d' dist/index.js && \
-        sed -i.bak 's/export { base642Bin, bin2Base64 }/export { base642Bin, bin2Base64 }/' dist/index.js && \
-        echo "" >> dist/index.js && \
-        echo "// Run ensureInit automatically" >> dist/index.js && \
-        echo "await ensureInit()" >> dist/index.js && \
-        rm dist/index.js.bak; \
-    fi
+    sed -i.bak 's#// prettier-ignore#/\* @ts-self-types="./mod.d.ts" \*/#' dist/index.js
+    sed -i.bak '/export { ensureInit }/d' dist/index.js
+    echo "" >> dist/index.js
+    echo "// Run ensureInit automatically" >> dist/index.js
+    echo "await ensureInit()" >> dist/index.js
+    rm dist/index.js.bak
+    mv dist/index.js dist/mod.js
+    mv dist/index.d.ts dist/mod.d.ts
+    
     @echo "🎨 Formatting generated code..."
-    @if command -v deno >/dev/null 2>&1; then \
-        deno fmt dist/ || true; \
-    else \
-        echo "⚠️  Deno not found, skipping formatting"; \
-    fi
+    deno fmt dist
     @echo "✅ Post-processing complete!"
 
 # Generate JSR configuration
@@ -82,7 +79,7 @@ generate-jsr:
     @echo "📦 Generating JSR configuration..."
     @mkdir -p dist
     @VERSION=$(grep '^version = ' Cargo.toml | cut -d'"' -f2) && \
-        sed "s/%VERSION%/$VERSION/g" jsr.json.tpl > dist/jsr.json
+        sed "s/\%VERSION\%/${VERSION}/g" jsr.json.tpl > dist/jsr.json
     @cp README.md dist/
     @echo "✅ JSR configuration ready!"
 

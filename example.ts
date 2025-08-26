@@ -1,8 +1,7 @@
 #!/usr/bin/env deno run --allow-read --allow-ffi --allow-env
 
 // Import the native module
-// @ts-ignore
-import * as sodium from "./dist/index.js";
+import * as sodium from "./dist/mod.js";
 
 console.log("🧂 Deno Sodium - GitHub Secret Encryption Example\n");
 

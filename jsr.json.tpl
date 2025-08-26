@@ -2,11 +2,11 @@
   "name": "@necessary/sodium",
   "version": "%VERSION%",
   "description": "Deno bindings for libsodium with focus on GitHub secret encryption",
-  "exports": "./index.js",
+  "exports": "./mod.js",
   "publish": {
     "include": [
-      "index.js",
-      "index.d.ts",
+      "mod.js",
+      "mod.d.ts",
       "*.node",
       "README.md"
     ]
