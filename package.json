@@ -1,0 +1,14 @@
+{
+  "name": "@necessary/sodium",
+  "version": "0.1.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "type": "module",
+  "napi": {
+    "binaryName": "sodium"
+  },
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform"
+  }
+}
