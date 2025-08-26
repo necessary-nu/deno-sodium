@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@deno/cache-dir@0.25.0": "0.25.0",
     "jsr:@necessary/sodium@0.1.0-alpha.2": "0.1.0-alpha.2",
+    "jsr:@necessary/sodium@0.1.0-alpha.4": "0.1.0-alpha.4",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
     "jsr:@std/fmt@^1.0.3": "1.0.8",
     "jsr:@std/fs@^1.0.6": "1.0.19",
@@ -30,6 +31,13 @@
     },
     "@necessary/sodium@0.1.0-alpha.3": {
       "integrity": "00c444be35041340e992b94c93b57585a5d21b5286f00ddca6f741f534a60829",
+      "dependencies": [
+        "jsr:@deno/cache-dir",
+        "jsr:@std/path@1.1.2"
+      ]
+    },
+    "@necessary/sodium@0.1.0-alpha.4": {
+      "integrity": "0bfcfecfcc66b206ddd07f74d19f58146095fb73caa4f60e1179ed6e9da1f3d8",
       "dependencies": [
         "jsr:@deno/cache-dir",
         "jsr:@std/path@1.1.2"

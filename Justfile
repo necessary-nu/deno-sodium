@@ -92,11 +92,13 @@ build-local-release:
 mac-x64:
     @echo "🍎 Building for macOS x86_64..."
     napi build --platform --release -o dist --esm --target x86_64-apple-darwin -s
+    install_name_tool -id @rpath/sodium.darwin-x64.node dist/sodium.darwin-x64.node
 
 # Build for macOS ARM64
 mac-arm64:
     @echo "🍎 Building for macOS ARM64..."
     napi build --platform --release -o dist --esm --target aarch64-apple-darwin -s
+    install_name_tool -id @rpath/sodium.darwin-arm64.node dist/sodium.darwin-arm64.node
 
 # Build for Linux x86_64 (GNU)
 linux-x64:
