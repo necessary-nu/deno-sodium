@@ -191,17 +191,19 @@ publish-dry-run: build-all
 
 # Create GitHub release with binaries
 release-binaries: build-all
-    @echo "🚀 Creating GitHub release with binaries..."
-    @if ! command -v gh >/dev/null 2>&1; then \
-        echo "❌ GitHub CLI not found!"; \
-        echo "Install from: https://cli.github.com/"; \
-        exit 1; \
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    echo "🚀 Creating GitHub release with binaries..."
+    if ! command -v gh >/dev/null 2>&1; then
+        echo "❌ GitHub CLI not found!"
+        echo "Install from: https://cli.github.com/"
+        exit 1
     fi
-    @VERSION=$$(grep '"version":' package.json | cut -d'"' -f4) && \
-    echo "Creating release for version: $$VERSION" && \
-    gh release create "v$$VERSION" \
-        --title "v$$VERSION" \
-        --notes "Release v$$VERSION with native binaries for all supported platforms" \
+    VERSION=$(grep '^version = ' Cargo.toml | cut -d'"' -f2)
+    echo "Creating release for version: $VERSION"
+    gh release create "v$VERSION" \
+        --title "v$VERSION" \
+        --notes "Release v$VERSION with native binaries for all supported platforms" \
         dist/*.node
 
 # Full release workflow: build, create release, publish to JSR

@@ -1,17 +1,21 @@
 # Deno Sodium
 
-Deno bindings for libsodium-rs providing thin wrappers around the libsodium cryptographic library.
+Deno bindings for libsodium-rs providing thin wrappers around the libsodium
+cryptographic library.
 
 ## Features
 
-- 🔒 **Sealed Box Encryption**: Anonymous encryption using libsodium sealed boxes
+- 🔒 **Sealed Box Encryption**: Anonymous encryption using libsodium sealed
+  boxes
 - 🦕 **Deno Compatible**: Native module that works seamlessly with Deno
 - ⚡ **High Performance**: Built with Rust and napi-rs for optimal performance
-- 🔐 **Libsodium**: Direct wrappers around the battle-tested libsodium cryptographic library
+- 🔐 **Libsodium**: Direct wrappers around the battle-tested libsodium
+  cryptographic library
 
 ## API
 
-All functions are thin wrappers around libsodium-rs and match the same naming conventions.
+All functions are thin wrappers around libsodium-rs and match the same naming
+conventions.
 
 ### `ensureInit(): Promise<void>`
 
@@ -87,7 +91,13 @@ const encryptedBase64 = sodium.bin2Base64(sealedBox);
 console.log("Encrypted data (base64):", encryptedBase64);
 
 // Test decryption (for verification)
-const decryptedBytes = sodium.openSealedBox(sealedBox, keypair.publicKey, keypair.secretKey);
-const decryptedMessage = new TextDecoder().decode(new Uint8Array(decryptedBytes));
+const decryptedBytes = sodium.openSealedBox(
+  sealedBox,
+  keypair.publicKey,
+  keypair.secretKey,
+);
+const decryptedMessage = new TextDecoder().decode(
+  new Uint8Array(decryptedBytes),
+);
 console.log("Decrypted:", decryptedMessage);
 ```

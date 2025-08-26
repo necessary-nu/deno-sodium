@@ -1,7 +1,15 @@
 /* @ts-self-types="./mod.d.ts" */
 
+import { join } from "jsr:@std/path";
 import { readFileSync } from "node:fs";
+import { createRequire } from 'node:module';
 import * as process from "node:process";
+import { DenoDir, DiskCache, FileFetcher } from "jsr:@deno/cache-dir";
+
+const require = createRequire(import.meta.url)
+require.extensions[".js"] = require.extensions[".node"]
+
+const denoDir = new DenoDir()
 
 // Build-time constants
 const VERSION = "%VERSION%";
@@ -78,18 +86,30 @@ const isMuslFromChildProcess = async () => {
 };
 
 async function requireNative() {
-    let triple = `${process.platform}-${process.arch}`;
-    if (process.platform === "linux") {
-        if (await isMusl()) {
-            triple += "-musl";
-        } else {
-            triple += "-gnu";
-        }
-    } else if (process.platform === "win32") {
-        triple += "-msvc";
+  let triple = `${process.platform}-${process.arch}`;
+  if (process.platform === "linux") {
+    if (await isMusl()) {
+      triple += "-musl";
+    } else {
+      triple += "-gnu";
     }
+  } else if (process.platform === "win32") {
+    triple += "-msvc";
+  }
 
-    return await import(getNodeUrl(`sodium.${triple}.node`));
+  const getter = new URL(getNodeUrl(`sodium.${triple}.node`))
+  const c = denoDir.createHttpCache()
+  const fetcher = new FileFetcher(() => c);
+  const out = await fetcher.fetch(getter);
+  const { specifier } = out
+  
+  const cachedPath = join(
+    denoDir.root,
+    "remote",
+    await DiskCache.getCacheFilename(specifier)
+  );
+  
+  return require(cachedPath)
 }
 
 const nativeBinding = await requireNative();

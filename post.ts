@@ -6,7 +6,9 @@ console.log("🔧 Post-processing generated files...");
 
 // Read and parse Cargo.toml
 const cargoToml = await Deno.readTextFile("Cargo.toml");
-const cargo = parseToml(cargoToml) as { package: { version: string; repository: string } };
+const cargo = parseToml(cargoToml) as {
+  package: { version: string; repository: string };
+};
 const version = cargo.package.version;
 const repo = cargo.package.repository;
 

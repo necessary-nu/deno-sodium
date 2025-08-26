@@ -21,21 +21,32 @@ try {
   // Encrypt using raw libsodium seal_box
   const sealedBox = sodium.sealBox(Array.from(messageBytes), keypair.publicKey);
   console.log("✅ Encryption successful!");
-  
+
   // For GitHub API, we need to base64 encode the result
   const encryptedBase64 = sodium.bin2Base64(sealedBox);
   console.log("Encrypted data (base64):", encryptedBase64);
-  
-  console.log("\n📤 This encrypted string can now be sent to GitHub's secrets API");
-  
+
+  console.log(
+    "\n📤 This encrypted string can now be sent to GitHub's secrets API",
+  );
+
   // Test decryption (for verification only - GitHub handles this)
   console.log("\n🔓 Testing decryption (for verification)...");
   try {
-    const decryptedBytes = sodium.openSealedBox(sealedBox, keypair.publicKey, keypair.secretKey);
-    const decryptedMessage = new TextDecoder().decode(new Uint8Array(decryptedBytes));
+    const decryptedBytes = sodium.openSealedBox(
+      sealedBox,
+      keypair.publicKey,
+      keypair.secretKey,
+    );
+    const decryptedMessage = new TextDecoder().decode(
+      new Uint8Array(decryptedBytes),
+    );
     console.log("✅ Decryption successful!");
     console.log("Decrypted message:", decryptedMessage);
-    console.log("✅ Original message matches:", decryptedMessage === secretMessage);
+    console.log(
+      "✅ Original message matches:",
+      decryptedMessage === secretMessage,
+    );
   } catch (error) {
     if (error instanceof Error) {
       console.error("❌ Decryption failed:", error.message);
@@ -57,8 +68,12 @@ try {
 
 console.log("\n🎉 Example completed!");
 console.log("\n📚 GitHub Integration Workflow:");
-console.log("1. Get repository public key: GET /repos/:owner/:repo/actions/secrets/public-key");  
+console.log(
+  "1. Get repository public key: GET /repos/:owner/:repo/actions/secrets/public-key",
+);
 console.log("2. const publicKey = sodium.base642Bin(response.key);");
 console.log("3. const sealed = sodium.sealBox(secretBytes, publicKey);");
 console.log("4. const encrypted = sodium.bin2Base64(sealed);");
-console.log("5. Send encrypted to: PUT /repos/:owner/:repo/actions/secrets/:secret_name");
+console.log(
+  "5. Send encrypted to: PUT /repos/:owner/:repo/actions/secrets/:secret_name",
+);
