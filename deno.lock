@@ -28,6 +28,13 @@
         "jsr:@std/path@1.1.2"
       ]
     },
+    "@necessary/sodium@0.1.0-alpha.3": {
+      "integrity": "00c444be35041340e992b94c93b57585a5d21b5286f00ddca6f741f534a60829",
+      "dependencies": [
+        "jsr:@deno/cache-dir",
+        "jsr:@std/path@1.1.2"
+      ]
+    },
     "@std/bytes@1.0.6": {
       "integrity": "f6ac6adbd8ccd99314045f5703e23af0a68d7f7e58364b47d2c7f408aeb5820a"
     },

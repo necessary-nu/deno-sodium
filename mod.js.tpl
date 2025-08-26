@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import * as process from "node:process";
 import { DenoDir, DiskCache, FileFetcher } from "jsr:@deno/cache-dir@0.25.0";
 
-const require = createRequire(new URL(import.meta.url))
+const require = createRequire("/")
 require.extensions[".js"] = require.extensions[".node"]
 
 const denoDir = new DenoDir()
@@ -86,7 +86,7 @@ async function requireNative()  {
   const getter = new URL(getNodeUrl(`sodium.${triple}.node`))
   const c = denoDir.createHttpCache()
   const fetcher = new FileFetcher(() => c);
-  const out = await fetcher.fetch(getter);
+  const out = await fetcher.fetchOnce(getter);
   
   if (!out) {
     throw new Error(`Failed to fetch native binding for ${triple}`);
