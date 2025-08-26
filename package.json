@@ -1,9 +1,10 @@
 {
   "name": "@necessary/sodium",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.2",
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
+  "repository": "https://github.com/necessary-nu/deno-sodium",
   "napi": {
     "binaryName": "sodium"
   },

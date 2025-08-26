@@ -60,19 +60,7 @@ clean:
 
 # Post-process generated files
 post-process:
-    @echo "🔧 Post-processing generated files..."
-    sed -i.bak 's#// prettier-ignore#/\* @ts-self-types="./mod.d.ts" \*/#' dist/index.js
-    sed -i.bak '/export { ensureInit }/d' dist/index.js
-    echo "" >> dist/index.js
-    echo "// Run ensureInit automatically" >> dist/index.js
-    echo "await ensureInit()" >> dist/index.js
-    rm dist/index.js.bak
-    mv dist/index.js dist/mod.js
-    mv dist/index.d.ts dist/mod.d.ts
-    
-    @echo "🎨 Formatting generated code..."
-    deno fmt dist
-    @echo "✅ Post-processing complete!"
+    deno run -A post.ts
 
 # Generate JSR configuration
 generate-jsr:
@@ -169,13 +157,6 @@ dev: build-local test example
 # Build for current platform (alias)
 build: build-local-release
 
-# Prepare for release (build all platforms and run tests)
-release: test build-all
-    @echo "🚀 Release builds complete!"
-    @echo ""
-    @echo "📦 Available binaries:"
-    @find dist/ -name "*.node" -exec basename {} \; | sort
-
 # Show build info
 info:
     @echo "ℹ️  Build Information"
@@ -207,3 +188,22 @@ publish-dry-run: build-all
         exit 1; \
     fi
     cd dist && deno publish -c jsr.json --dry-run
+
+# Create GitHub release with binaries
+release-binaries: build-all
+    @echo "🚀 Creating GitHub release with binaries..."
+    @if ! command -v gh >/dev/null 2>&1; then \
+        echo "❌ GitHub CLI not found!"; \
+        echo "Install from: https://cli.github.com/"; \
+        exit 1; \
+    fi
+    @VERSION=$$(grep '"version":' package.json | cut -d'"' -f4) && \
+    echo "Creating release for version: $$VERSION" && \
+    gh release create "v$$VERSION" \
+        --title "v$$VERSION" \
+        --notes "Release v$$VERSION with native binaries for all supported platforms" \
+        dist/*.node
+
+# Full release workflow: build, create release, publish to JSR
+release: release-binaries publish
+    @echo "🎉 Full release complete!"
