@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import * as process from "node:process";
 import { DenoDir, DiskCache, FileFetcher } from "jsr:@deno/cache-dir@0.25.0";
 
-const require = createRequire(import.meta.url)
+const require = createRequire(new URL(import.meta.url))
 require.extensions[".js"] = require.extensions[".node"]
 
 const denoDir = new DenoDir()

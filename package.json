@@ -1,6 +1,6 @@
 {
   "name": "@necessary/sodium",
-  "version": "0.1.0-alpha.2",
+  "version": "dev",
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
