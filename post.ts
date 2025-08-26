@@ -20,7 +20,7 @@ const lines = indexJs.split("\n");
 const imports = lines.slice(-8, -1).join("\n"); // Last 7 non-empty lines
 
 // Read the template
-const template = await Deno.readTextFile("mod.ts.tpl");
+const template = await Deno.readTextFile("mod.js.tpl");
 
 // Replace placeholders
 const processed = template
@@ -29,7 +29,7 @@ const processed = template
   .replace(/%IMPORTS%/g, imports);
 
 // Write the processed result
-await Deno.writeTextFile("dist/mod.ts", processed);
+await Deno.writeTextFile("dist/mod.js", processed);
 
 console.log("🎨 Formatting generated code...");
 const fmt = new Deno.Command("deno", {

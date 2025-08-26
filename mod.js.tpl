@@ -1,10 +1,10 @@
 /* @ts-self-types="./mod.d.ts" */
 
-import { join } from "jsr:@std/path";
+import { join } from "jsr:@std/path@1.1.2";
 import { readFileSync } from "node:fs";
 import { createRequire } from 'node:module';
 import * as process from "node:process";
-import { DenoDir, DiskCache, FileFetcher } from "jsr:@deno/cache-dir";
+import { DenoDir, DiskCache, FileFetcher } from "jsr:@deno/cache-dir@0.25.0";
 
 const require = createRequire(import.meta.url)
 require.extensions[".js"] = require.extensions[".node"]
@@ -26,7 +26,7 @@ const SUPPORTED_PLATFORMS = [
     // "win32-arm64-msvc",
 ]
 
-function getNodeUrl(filename: string) {
+function getNodeUrl(filename) {
   return `${REPO_URL}/releases/download/v${VERSION}/${filename}`;
 }
 
@@ -37,20 +37,17 @@ const isMusl = async () => {
     if (musl === null) {
       musl = isMuslFromReport() ?? false;
     }
-    if (musl === null) {
-      musl = await isMuslFromChildProcess();
-    }
   }
   return musl;
 };
 
-const isFileMusl = (f: string) => f.includes("libc.musl-") || f.includes("ld-musl-");
+const isFileMusl = (f) => f.includes("libc.musl-") || f.includes("ld-musl-");
 
 const isMuslFromFilesystem = () => {
   try {
     return readFileSync("/usr/bin/ldd", "utf-8").includes("musl");
   } catch {
-    return null;
+    return false;
   }
 };
 
@@ -74,18 +71,7 @@ const isMuslFromReport = () => {
   return false;
 };
 
-const isMuslFromChildProcess = async () => {
-  try {
-    return (await import("node:child_process")).exec("ldd --version", {
-      encoding: "utf8",
-    }).includes("musl");
-  } catch (e) {
-    // If we reach this case, we don't know if the system is musl or not, so is better to just fallback to false
-    return false;
-  }
-};
-
-async function requireNative() {
+async function requireNative()  {
   let triple = `${process.platform}-${process.arch}`;
   if (process.platform === "linux") {
     if (await isMusl()) {
@@ -101,12 +87,17 @@ async function requireNative() {
   const c = denoDir.createHttpCache()
   const fetcher = new FileFetcher(() => c);
   const out = await fetcher.fetch(getter);
+  
+  if (!out) {
+    throw new Error(`Failed to fetch native binding for ${triple}`);
+  }
+
   const { specifier } = out
   
   const cachedPath = join(
     denoDir.root,
     "remote",
-    await DiskCache.getCacheFilename(specifier)
+    await DiskCache.getCacheFilename(new URL(specifier))
   );
   
   return require(cachedPath)
